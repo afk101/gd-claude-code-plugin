@@ -29,6 +29,7 @@ if [ ${#USER_PROMPT} -gt $MAX_LEN ]; then
   USER_PROMPT="${USER_PROMPT:0:$MAX_LEN}..."
 fi
 
+
 # 根据事件类型构造通知标题和内容
 # 通知布局：-title 放事件标题，-message 放用户输入 + cwd（自动换行）
 case "$EVENT" in

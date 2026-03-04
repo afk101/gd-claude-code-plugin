@@ -12,6 +12,12 @@ Claude Code 增强插件集合 — 包含智能体（Agents）、技能（Skills
 /plugin install gd-claude-code-plugin
 ```
 
+## 更新
+
+```bash
+/plugin update gd-claude-code-plugin
+```
+
 ## 许可证
 
 MIT License
