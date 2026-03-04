@@ -1,8 +1,9 @@
 {
   "name": "gd-claude-code-plugin",
   "version": "1.0.1",
-  "description": "Claude Code 增强插件集合 — 包含智能体、技能、钩子、命令和输出风格",
-  "author": "afk101",
-  "homepage": "https://github.com/afk101/gd-claude-code-plugin",
+  "description": "Claude Code 增强插件集合 — 包含智能体、技能和钩子",
+  "author": {
+    "name": "afk101"
+  },
   "license": "MIT"
 }
