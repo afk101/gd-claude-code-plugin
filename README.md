@@ -5,6 +5,9 @@ Claude Code 增强插件集合 — 包含智能体（Agents）、技能（Skills
 ## 安装
 
 ```bash
+# 安装依赖  
+brew install terminal-notifier jq
+
 # 添加市场源
 /plugin marketplace add afk101/gd-claude-code-plugin
 
