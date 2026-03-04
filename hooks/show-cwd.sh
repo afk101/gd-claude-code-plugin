@@ -1,7 +1,6 @@
 #!/bin/bash
 # Stop 事件后显示当前工作目录（CWD）
 # 输出 systemMessage，仅显示给用户，不进入对话历史
-
 INPUT=$(cat)
 CWD=$(echo "$INPUT" | jq -r '.cwd // ""')
 
