@@ -17,24 +17,24 @@ version: 1.0.0
 
 ### 第一步：确保 .gitignore 配置
 
-在写入任务文件之前，检查项目根目录的 `.gitignore` 是否已包含 `clawt/tasks` 条目。
+在写入任务文件之前，检查项目根目录的 `.gitignore` 是否已包含 `.clawt/tasks` 条目。
 
-- 若 `.gitignore` 中已存在 `clawt/tasks` 或 `clawt/tasks/`，跳过
+- 若 `.gitignore` 中已存在 `.clawt/tasks` 或 `.clawt/tasks/`，跳过
 - 若不存在，在 `.gitignore` 末尾追加：
 
 ```
 # clawt 任务文件（自动生成，无需版本控制）
-clawt/tasks/
+.clawt/tasks/
 ```
 
 - 若 `.gitignore` 文件不存在，则不处理
 
 ### 第二步：创建输出目录
 
-确保 `clawt/tasks/` 目录存在：
+确保 `.clawt/tasks/` 目录存在：
 
 ```bash
-mkdir -p clawt/tasks
+mkdir -p .clawt/tasks
 ```
 
 ### 第三步：收集任务信息
@@ -53,7 +53,7 @@ mkdir -p clawt/tasks
 - 使用当前时间戳，格式为年-月-日-时-分-秒
 - 示例：`clawt-tasks-2000-01-01-14-30-00.md`
 
-**文件路径**：`clawt/tasks/clawt-tasks-YYYY-MM-DD-HH-mm-ss.md`
+**文件路径**：`.clawt/tasks/clawt-tasks-YYYY-MM-DD-HH-mm-ss.md`
 
 **文件内容结构**：
 
@@ -84,7 +84,7 @@ mkdir -p clawt/tasks
 文件生成后，输出可直接复制执行的 clawt 命令：
 
 ```bash
-clawt run -f clawt/tasks/clawt-tasks-YYYY-MM-DD-HH-mm-ss.md
+clawt run -f .clawt/tasks/clawt-tasks-YYYY-MM-DD-HH-mm-ss.md
 ```
 
 ## 任务描述编写指南
