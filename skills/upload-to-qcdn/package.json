@@ -1,0 +1,9 @@
+{
+  "name": "upload-to-qcdn-skill",
+  "version": "1.0.0",
+  "description": "Skill for uploading files to QCDN",
+  "type": "module",
+  "dependencies": {
+    "@q/qcdn": "^3.2.9"
+  }
+}
