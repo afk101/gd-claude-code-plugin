@@ -17,12 +17,12 @@ Run the script using absolute path (do NOT cd to skill directory first):
 
 **Generate new image:**
 ```bash
-uv run ~/.claude/skills/zyuncs-lyra-flash-1.0.0/scripts/generate_image.py --prompt "your image description" --filename "output-name.png" [--api-key KEY]
+uv run ~/.claude/skills/nano-banana-pro-zyuncs/scripts/generate_image.py --prompt "your image description" --filename "output-name.png" [--api-key KEY]
 ```
 
 **Edit existing image:**
 ```bash
-uv run ~/.claude/skills/zyuncs-lyra-flash-1.0.0/scripts/generate_image.py --prompt "editing instructions" --filename "output-name.png" --input-image "path/to/input.png" [--api-key KEY]
+uv run ~/.claude/skills/nano-banana-pro-zyuncs/scripts/generate_image.py --prompt "editing instructions" --filename "output-name.png" --input-image "path/to/input.png" [--api-key KEY]
 ```
 
 **Important:** Always run from the user's current working directory so images are saved where the user is working, not in the skill directory.
@@ -32,11 +32,11 @@ uv run ~/.claude/skills/zyuncs-lyra-flash-1.0.0/scripts/generate_image.py --prom
 Goal: fast iteration to get the prompt right.
 
 - Draft: quick feedback loop
-  - `uv run ~/.claude/skills/zyuncs-lyra-flash-1.0.0/scripts/generate_image.py --prompt "<draft prompt>" --filename "yyyy-mm-dd-hh-mm-ss-draft.png"`
+  - `uv run ~/.claude/skills/nano-banana-pro-zyuncs/scripts/generate_image.py --prompt "<draft prompt>" --filename "yyyy-mm-dd-hh-mm-ss-draft.png"`
 - Iterate: adjust prompt in small diffs; keep filename new per run
   - If editing: keep the same `--input-image` for every iteration until you're happy.
 - Final: when prompt is locked
-  - `uv run ~/.claude/skills/zyuncs-lyra-flash-1.0.0/scripts/generate_image.py --prompt "<final prompt>" --filename "yyyy-mm-dd-hh-mm-ss-final.png"`
+  - `uv run ~/.claude/skills/nano-banana-pro-zyuncs/scripts/generate_image.py --prompt "<final prompt>" --filename "yyyy-mm-dd-hh-mm-ss-final.png"`
 
 ## API Key
 
@@ -116,10 +116,10 @@ Use templates when the user is vague or when edits must be precise.
 
 **Generate new image:**
 ```bash
-uv run ~/.claude/skills/zyuncs-lyra-flash-1.0.0/scripts/generate_image.py --prompt "A serene Japanese garden with cherry blossoms" --filename "2026-03-13-14-23-05-japanese-garden.png"
+uv run ~/.claude/skills/nano-banana-pro-zyuncs/scripts/generate_image.py --prompt "A serene Japanese garden with cherry blossoms" --filename "2026-03-13-14-23-05-japanese-garden.png"
 ```
 
 **Edit existing image:**
 ```bash
-uv run ~/.claude/skills/zyuncs-lyra-flash-1.0.0/scripts/generate_image.py --prompt "make the sky more dramatic with storm clouds" --filename "2026-03-13-14-25-30-dramatic-sky.png" --input-image "original-photo.jpg"
+uv run ~/.claude/skills/nano-banana-pro-zyuncs/scripts/generate_image.py --prompt "make the sky more dramatic with storm clouds" --filename "2026-03-13-14-25-30-dramatic-sky.png" --input-image "original-photo.jpg"
 ```
