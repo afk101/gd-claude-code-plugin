@@ -41,8 +41,19 @@ mkdir -p .clawt/tasks
 
 1. **背景**：项目技术栈、当前状态、相关上下文
 2. **全局注意事项**：所有任务都需遵守的约束、规范、特别说明
-3. **任务详情*(用户提供)：如果用户给到的是一个明确的任务，那就只创建一个。而如果用户提到的任务可以拆分成多个“独立”的任务，那你必须拆分为多个任务。
+3. **任务详情**（用户提供）：如果用户给到的是一个明确的任务，那就只创建一个。而如果用户提到的任务可以拆分成多个”独立”的任务，那你必须拆分为多个任务。
 注意点：你必须评估是否可以拆分成独立的任务。例如，用户想让你提供优化建议或者可以新增的功能，那你就必须将各个独立的建议或者功能分成多个任务，每个任务都必须有任务背景，注意事项可选。
+4. **关键信息完整保留**（⚠️ 最高优先级约束）：用户提供的关键定位信息和资源引用，在拆分为多个任务时，**必须原样、完整地复制到每一个相关任务的描述中**，绝对不允许省略、缩写或仅在公共背景区提及。这些关键信息包括但不限于：
+   - **Figma 设计链接**（如 `https://figma.com/design/xxx?node-id=1-2`）
+   - **图片/截图路径**（如 `/path/to/design.png`、`./assets/mockup.jpg`）
+   - **DOM path / 元素定位**（如 `div.container > section.hero > h1`）
+   - **API 端点 / 接口地址**（如 `POST /api/v1/users`）
+   - **文件路径**（如 `src/components/Header.tsx`）
+   - **数据库表名、字段名**
+   - **具体的配置项、环境变量名**
+   - **用户提供的任何 URL、链接、引用标识**
+
+   **原因**：每个任务由独立的 Agent 并行执行，Agent 之间无法共享上下文，因此每个任务必须自包含所有必要信息。
 
 若所有信息都有，直接进入生成步骤，无需额外询问具体任务。
 
@@ -95,6 +106,7 @@ clawt run -f .clawt/tasks/clawt-tasks-YYYY-MM-DD-HH-mm-ss.md
 - **包含验收标准**：在任务描述中列明预期的结果或完成标准
 - **提供必要上下文**：相关的文件路径、函数名、API 接口等具体引用
 - **合理拆分粒度**：每个任务应当是一个独立的、可并行执行的工作单元
+- **⚠️ 关键信息自包含**：用户提供的 Figma 链接、图片路径、DOM 定位、API 地址等关键信息，必须完整复制到每一个需要该信息的任务中，不得省略。每个任务是独立执行的，不能依赖其他任务或公共区域的信息。
 
 ### 好的任务描述示例
 
@@ -116,6 +128,58 @@ clawt run -f .clawt/tasks/clawt-tasks-YYYY-MM-DD-HH-mm-ss.md
 <!-- CLAWT-TASKS:START -->
 # branch: feat-auth
 做一下用户登录
+<!-- CLAWT-TASKS:END -->
+```
+
+### ⚠️ 关键信息保留 — 正确 vs 错误示例
+
+**场景**：用户提供了 Figma 链接 `https://figma.com/design/abc123?node-id=10-20` 和截图 `/tmp/design-mockup.png`，要求实现页面的 Header 和 Footer 两个组件。
+
+**❌ 错误做法**（关键信息丢失）：
+
+```markdown
+<!-- CLAWT-TASKS:START -->
+# branch: feat-header
+根据设计稿实现 Header 组件：
+- 包含 Logo、导航菜单、用户头像
+- 响应式布局，移动端显示汉堡菜单
+<!-- CLAWT-TASKS:END -->
+
+<!-- CLAWT-TASKS:START -->
+# branch: feat-footer
+根据设计稿实现 Footer 组件：
+- 包含版权信息、社交媒体链接
+- 底部固定布局
+<!-- CLAWT-TASKS:END -->
+```
+
+**✅ 正确做法**（每个任务都完整包含关键信息）：
+
+```markdown
+<!-- CLAWT-TASKS:START -->
+# branch: feat-header
+根据设计稿实现 Header 组件：
+
+设计稿参考：
+- Figma 链接：https://figma.com/design/abc123?node-id=10-20
+- 设计截图：/tmp/design-mockup.png
+
+实现要求：
+- 包含 Logo、导航菜单、用户头像
+- 响应式布局，移动端显示汉堡菜单
+<!-- CLAWT-TASKS:END -->
+
+<!-- CLAWT-TASKS:START -->
+# branch: feat-footer
+根据设计稿实现 Footer 组件：
+
+设计稿参考：
+- Figma 链接：https://figma.com/design/abc123?node-id=10-20
+- 设计截图：/tmp/design-mockup.png
+
+实现要求：
+- 包含版权信息、社交媒体链接
+- 底部固定布局
 <!-- CLAWT-TASKS:END -->
 ```
 
