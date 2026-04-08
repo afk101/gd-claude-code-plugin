@@ -3,6 +3,10 @@
 # 功能：从 stdin 读取 Hook 事件 JSON，提取事件信息和用户原始输入，发送 macOS 桌面通知
 # 支持的事件：Notification（需要用户操作）、Stop（任务执行完毕）
 
+# cmux 终端 Bundle ID 常量
+CMUX_BUNDLE_RELEASE="com.cmuxterm.app"
+CMUX_BUNDLE_NIGHTLY="com.cmuxterm.app.nightly"
+
 # 读取 stdin 的 JSON 数据
 INPUT=$(cat)
 
@@ -63,7 +67,29 @@ fi
 # 获取当前 Claude Code 所在的 tty（用于点击通知后跳转到对应终端 tab，支持 iTerm2 和 Terminal.app）
 CURRENT_TTY=$(ps -o tty= -p $PPID 2>/dev/null | tr -d ' ')
 
+# cmux 终端检测：优先通过环境变量判断（比进程树遍历更可靠）
+# cmux 会在每个 surface 的 shell 中注入 CMUX_SURFACE_ID 等环境变量
+# 在此时捕获这些值，因为点击通知时执行的跳转脚本已脱离原始 shell 环境
+CAPTURED_CMUX_SURFACE_ID="${CMUX_SURFACE_ID:-}"
+CAPTURED_CMUX_WORKSPACE_ID="${CMUX_WORKSPACE_ID:-}"
+CAPTURED_CMUX_BUNDLE_ID="${CMUX_BUNDLE_ID:-}"
+
+if [ -n "$CAPTURED_CMUX_SURFACE_ID" ]; then
+  HOST_APP="cmux"
+  # 根据 CMUX_BUNDLE_ID 或进程检测确定使用哪个 Bundle ID（Release/Nightly）
+  if [ -n "$CAPTURED_CMUX_BUNDLE_ID" ]; then
+    HOST_BUNDLE="$CAPTURED_CMUX_BUNDLE_ID"
+  elif pgrep -x "cmux" >/dev/null 2>&1 && [ -d "/Applications/cmux-nightly.app" ]; then
+    # 如果 nightly 版本的 app 存在，尝试检测当前运行的是哪个
+    HOST_BUNDLE="$CMUX_BUNDLE_RELEASE"
+  else
+    HOST_BUNDLE="$CMUX_BUNDLE_RELEASE"
+  fi
+fi
+
 # 检测宿主终端应用：沿进程树向上查找
+# 仅在 cmux 环境变量检测未命中时，才通过进程树遍历来识别终端
+if [ -z "$HOST_APP" ]; then
 HOST_APP=""
 HOST_BUNDLE=""
 _PID=$$
@@ -86,13 +112,35 @@ for _i in $(seq 1 15); do
     *Alacritty*)           HOST_APP="alacritty";  HOST_BUNDLE="org.alacritty"; break ;;
     *kitty*)               HOST_APP="kitty";      HOST_BUNDLE="net.kovidgoyal.kitty"; break ;;
     *WezTerm*|*wezterm*)   HOST_APP="wezterm";    HOST_BUNDLE="com.github.wez.wezterm"; break ;;
+    *cmux*)                HOST_APP="cmux";       HOST_BUNDLE="com.cmuxterm.app"; break ;;
   esac
 done
+fi
 
 # 构造点击通知后的跳转脚本
 # 使用临时脚本文件避免 -execute 参数中的引号嵌套导致参数解析错误
 JUMP_SCRIPT="/tmp/claude-notify-jump-$$.sh"
-if [ "$HOST_APP" = "iterm2" ] && [ -n "$CURRENT_TTY" ]; then
+if [ "$HOST_APP" = "cmux" ]; then
+  # cmux 终端：激活应用到前台，并跳转到指定的 workspace/pane/surface
+  # 跳转粒度：优先使用 surface（最精确），其次 workspace（粗略定位）
+  cat > "$JUMP_SCRIPT" <<CMUXSCRIPT
+#!/bin/bash
+# 激活 cmux 应用到前台
+open -b "$HOST_BUNDLE"
+# 等待应用激活完成
+sleep 0.3
+# 跳转到指定的 surface（最精确的定位）
+CMUX_BIN="\$(command -v cmux 2>/dev/null || echo '/opt/homebrew/bin/cmux')"
+if [ -n "$CAPTURED_CMUX_SURFACE_ID" ] && [ -x "\$CMUX_BIN" ]; then
+  "\$CMUX_BIN" focus-panel --panel "$CAPTURED_CMUX_SURFACE_ID" 2>/dev/null
+elif [ -n "$CAPTURED_CMUX_WORKSPACE_ID" ] && [ -x "\$CMUX_BIN" ]; then
+  # 回退到 workspace 级别跳转
+  "\$CMUX_BIN" select-workspace --workspace "$CAPTURED_CMUX_WORKSPACE_ID" 2>/dev/null
+fi
+rm -f "$JUMP_SCRIPT"
+CMUXSCRIPT
+  chmod +x "$JUMP_SCRIPT"
+elif [ "$HOST_APP" = "iterm2" ] && [ -n "$CURRENT_TTY" ]; then
   # iTerm2：通过 AppleScript 激活并跳转到对应 tty 的 tab
   cat > "$JUMP_SCRIPT" <<ASCRIPT
 #!/bin/bash
