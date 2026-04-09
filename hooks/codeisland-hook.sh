@@ -1,8 +1,9 @@
 #!/bin/bash
-# CodeIsland hook v4 — native bridge with shell fallback
+# CodeIsland hook v3 — native bridge with shell fallback
 BRIDGE="$HOME/.claude/hooks/codeisland-bridge"
 if [ -x "$BRIDGE" ]; then
-  exec "$BRIDGE" "$@"
+  "$BRIDGE" "$@"
+  exit $?
 fi
 # Fallback: original shell approach (no binary installed yet)
 SOCK="/tmp/codeisland-$(id -u).sock"
