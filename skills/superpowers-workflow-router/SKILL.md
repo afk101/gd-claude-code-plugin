@@ -17,8 +17,8 @@ description: 仅在用户明确调用时使用（如 /workflow-router 或"使用
 
 | 信号 | 类型 |
 |------|------|
-| 新建、添加、实现、开发、支持… | 新增功能 |
-| 报错、失败、崩溃、不对、异常… | Bug 修复 |
+| 新建、添加、实现、开发、支持… | 新增功能 → 流程 A |
+| 报错、失败、崩溃、不对、异常… | Bug 修复 → 流程 B |
 
 ---
 
@@ -71,8 +71,12 @@ verification-before-completion
 
 ```
 systematic-debugging
-    ↓  ← Phase 4 写复现测试时
-test-driven-development
+    ↓  ← 调查过程中向用户提问，迭代 findings，直到根本原因明确
+brainstorming
+    ↓  ← 根本原因已知，讨论修复方案，产出 spec，有新发现则追加 findings
+writing-plans
+    ↓  ← 基于 spec 制定修复计划
+test-driven-development  ← 先写复现失败测试，再写修复
     ↓  ← 声称修复完成前
 verification-before-completion
     ↓  ← 可选：存在 3+ 个相互独立的 bug 时
@@ -82,21 +86,33 @@ parallel-bug-fix
 ### 各步说明
 
 **1. `superpowers:systematic-debugging`**
-必须先调用，禁止跳过直接修复。严格按四个阶段执行：
-- **Phase 1** 根本原因调查：读错误 → 复现 → 检查最近变更 → 收集证据 → 追踪数据流到源头
+调查阶段。先调查，遇到信息盲区时像头脑风暴一样向用户提问，持续迭代 findings，直到根本原因明确。严格按三个调查阶段执行：
+- **Phase 1** 根本原因调查：创建 findings → 读错误 → 复现 → 检查最近变更 → **遇到不确定时向用户提问** → 收集证据 → 追踪数据流到源头
 - **Phase 2** 模式分析：找可工作的类似实现，逐行对比差异
-- **Phase 3** 假设与测试：单一假设，最小变更验证，一次只改一个变量
-- **Phase 4** 实现：先用 `superpowers:test-driven-development` 写复现失败测试，再写修复，再验证无回归
+- **Phase 3** 假设与测试：单一假设，最小变更验证，确认根本原因
 
-**3 次修复失败后**：停止，不再尝试，与用户讨论是否存在架构问题。
+根本原因明确后，**不要在这里写修复代码**，交给后续流程处理。
 
-**2. `superpowers:test-driven-development`**（在 Phase 4 时触发）
-先写复现 bug 的失败测试并确认其正确失败，再写修复使其通过，再 REFACTOR。没有失败测试就不写修复代码。
+**3 次假设验证失败后**：停止，与用户讨论是否存在架构问题。
 
-**3. `superpowers:verification-before-completion`**（声称修复完成前）
+**2. `superpowers:brainstorming`**
+根本原因已知，与用户讨论修复方案：
+- 提出 2-3 种修复方案及权衡（快速修复 vs 根治、影响范围、风险）
+- 编写 spec 文档：修复目标、验收标准、回归测试要求
+- 如有方案讨论中产生的新发现，追加到已有 findings 文件（不新建）
+→ 用户批准 spec 后，进入下一步。
+
+**3. `superpowers:writing-plans`**
+基于批准的 spec，制定具体修复计划：精确到文件和代码行、复现测试步骤、回归测试步骤。
+→ 计划保存完毕后，进入下一步。
+
+**4. `superpowers:test-driven-development`**
+先写复现 bug 的失败测试并确认其正确失败，再按 plan 写修复使其通过，再 REFACTOR。没有失败测试就不写修复代码。
+
+**5. `superpowers:verification-before-completion`**（声称修复完成前）
 运行完整测试套件，凭输出确认修复有效且无回归。
 
-**4. `superpowers:parallel-bug-fix`**（可选）
+**6. `superpowers:parallel-bug-fix`**（可选）
 当存在 3 个或以上**相互独立**的 bug 时使用。每个 bug 分配独立 agent，给定具体范围、明确目标、约束条件（不修改其他代码）、预期输出。所有 agent 完成后：检查摘要 → 确认修复无冲突 → 运行完整测试套件。
 
 不适用场景：bug 相互关联、需要完整系统状态、agent 会编辑同一文件。
@@ -105,8 +121,12 @@ parallel-bug-fix
 
 ## 编排者职责
 
-作为编排者，在每步开始前宣布：
+作为编排者，在每步开始前**必须真正调用对应的 skill**，而不仅仅是在语言上声明：
 
-> "现在进入第 N 步：`superpowers:<skill-name>`"
+**错误做法：**
+> "现在我将使用 brainstorming skill 来……"（只是说了，没有实际调用）
+
+**正确做法：**
+使用 `<skill-name>` 触发该 skill，让它的指令真正加载到上下文中并驱动行为。每步开始时宣布触发，等该 skill 完成其完整流程后，再进入下一步。
 
 每步完成后确认状态，再进入下一步。遇到障碍立即停止并寻求澄清，不猜测，不强行突破。
