@@ -54,7 +54,6 @@ brainstorming        ← 根本原因已知，讨论修复方案，产出 spec�
 writing-plans        ← 基于 spec 制定修复计划
     ↓
 [实现阶段]           ← 见下方「共用实现阶段」
-                        当存在 3+ 个相互独立的 bug 时，用 parallel-bug-fix 替代 subagent-driven-development
 ```
 
 **前置步骤说明：**
@@ -78,10 +77,6 @@ writing-plans        ← 基于 spec 制定修复计划
 **`superpowers:writing-plans`**
 基于批准的 spec，制定具体修复计划：精确到文件和代码行、复现测试步骤、回归测试步骤。
 → 计划保存完毕后，进入实现阶段。
-
-**`superpowers:parallel-bug-fix`**（替代 subagent-driven-development，当存在 3+ 个相互独立的 bug 时）
-当 bug 数量达到 3 个或以上且相互独立时，用此 skill **替代** subagent-driven-development 作为实现手段。每个 bug 分配独立 agent，给定具体范围、明确目标、约束条件（不修改其他代码）、预期输出。所有 agent 完成后：检查摘要 → 确认修复无冲突 → 派遣 final code reviewer 全量审查并处理反馈 → 进入 verification-before-completion。
-不适用场景：bug 相互关联、需要完整系统状态、agent 会编辑同一文件。
 
 ---
 

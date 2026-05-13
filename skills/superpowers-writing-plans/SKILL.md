@@ -131,9 +131,8 @@ git commit -m "feat: add specific feature"
 
 ## 执行移交
 
-保存计划后，直接移交执行：
+计划保存后，直接调用下一步：
 
 **"计划完成并保存到 `docs/superpowers/plans/<filename>.md`。"**
 
-- **必需的子技能:** 使用 superpowers:subagent-driven-development
-- 每个任务一个新 subagent + 两阶段审查（规范符合性 → 代码质量）
+调用 `superpowers:subagent-driven-development`，对每个任务派遣独立 subagent 执行（每个任务一个新 subagent + 两阶段审查：规范符合性 → 代码质量）。
