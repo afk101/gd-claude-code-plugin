@@ -60,7 +60,7 @@ digraph brainstorming {
     "编写设计文档" [shape=box];
     "规范自审\n(内联修复)" [shape=box];
     "用户审查规范?" [shape=diamond];
-    "调用 writing-plans 技能" [shape=doublecircle];
+    "规范批准，调用 writing-plans" [shape=doublecircle];
 
     "探索项目上下文" -> "是否有可视化问题?";
     "是否有可视化问题?" -> "提供可视化伴侣\n(单独消息,无其他内容)" [label="是"];
@@ -74,7 +74,7 @@ digraph brainstorming {
     "编写设计文档" -> "规范自审\n(内联修复)";
     "规范自审\n(内联修复)" -> "用户审查规范?";
     "用户审查规范?" -> "编写设计文档" [label="请求修改"];
-    "用户审查规范?" -> "调用 writing-plans 技能" [label="批准"];
+    "用户审查规范?" -> "规范批准，调用 writing-plans" [label="批准"];
 }
 ```
 

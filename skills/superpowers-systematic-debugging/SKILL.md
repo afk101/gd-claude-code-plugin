@@ -203,7 +203,7 @@ systematic-debugging → brainstorming → writing-plans → 实现
    - 不要一次修复多个事情
 
 3. **在继续之前验证**
-   - 有效吗？是的 → Phase 4
+   - 有效吗？是的 → 根本原因已确认，进入 brainstorming 讨论修复方案
    - 无效？形成新假设
    - 不要在上面添加更多修复
 
@@ -215,27 +215,17 @@ systematic-debugging → brainstorming → writing-plans → 实现
 
 ### Phase 4: 实现
 
-**修复根本原因，而不是症状：**
+**根本原因确认后，不要在此直接写修复代码。** 统一走以下流程：
 
-1. **创建失败的测试用例**
-   - 最简单的可能复现
-   - 如果可能，使用自动化测试
-   - 如果没有框架，使用一次性测试脚本
-   - 修复之前必须有测试
-   - 使用 `superpowers:test-driven-development` skill 编写正确的失败测试
+```
+brainstorming → writing-plans → subagent-driven-development
+```
 
-2. **实现单一修复**
-   - 解决已识别的根本原因
-   - 一次一个变更
-   - 不要"既然在这里"式的改进
-   - 不要打包重构
+- **brainstorming**：与用户讨论修复方案，产出 spec；有新发现则追加到已有 findings
+- **writing-plans**：基于 spec 制定具体修复计划，用户确认后执行
+- **subagent-driven-development**：按 plan 派遣 subagent 实现修复（内部遵循 test-driven-development）
 
-3. **验证修复**
-   - 测试现在通过了吗？
-   - 没有破坏其他测试？
-   - 问题真正解决了？
-
-4. **如果修复无效**
+如果修复尝试失败：
    - 停止
    - 计数：你已经尝试了多少次修复？
    - 如果 < 3：返回 Phase 1，用新信息重新分析
