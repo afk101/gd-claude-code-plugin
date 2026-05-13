@@ -9,6 +9,19 @@ description: 仅在 workflow-router 流程中由编排步骤调用，或用户�
 
 首先理解当前项目上下文，然后逐一提问以完善创意。一旦理解了要构建的内容，呈现设计并获得用户批准。
 
+## 两种调用场景
+
+**场景 A：新增功能**（默认行为）
+从零开始：探索上下文、澄清需求、产出 spec，**同时新建 findings 文件**记录调研过程。
+
+**场景 B：Bug 修复**（由 workflow-router 在 systematic-debugging 之后调用）
+根本原因已由 systematic-debugging 调查清楚，findings 文件已存在。此时 brainstorming 的职责是：
+- 与用户讨论修复方案（2-3 种方案及权衡）
+- 产出 spec 文档（修复目标、验收标准、回归测试要求）
+- **不新建 findings 文件**，如有新发现追加到已有文件
+
+**如何判断当前场景：** 若 `docs/superpowers/findings/` 下已存在与本次 bug 相关的 findings 文件，则为场景 B。
+
 <HARD-GATE>
 在呈现设计并获得用户批准之前，不要调用任何实现技能、编写任何代码、搭建任何项目或采取任何实现行动。这适用于每个项目，无论看起来多么简单。
 </HARD-GATE>

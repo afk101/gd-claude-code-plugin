@@ -189,6 +189,65 @@ Final reviewer: All requirements met, ready to merge
 向用户汇报所有任务已完成。
 ```
 
+## Final Code Review：如何派遣与处理反馈
+
+### 派遣 final code reviewer
+
+所有任务完成后，主 agent 执行：
+
+**1. 获取 git SHA：**
+```bash
+BASE_SHA=$(git rev-parse origin/main)  # 本次开发的起点
+HEAD_SHA=$(git rev-parse HEAD)
+```
+
+**2. 派遣 code-reviewer subagent，填写以下上下文：**
+- `WHAT_WAS_IMPLEMENTED`：本次实现的内容概述
+- `PLAN_OR_REQUIREMENTS`：对应的 spec/plan 文件路径
+- `BASE_SHA` / `HEAD_SHA`：审查范围
+- `DESCRIPTION`：简要总结
+
+### 处理 final code review 反馈
+
+代码审查需要技术评估，不是情感表演。**核心原则：先验证再实施，技术正确性优于社交舒适度。**
+
+**处理流程：**
+```
+1. 阅读：完整阅读反馈，不做即时反应
+2. 理解：用自己的话重述需求（或提问澄清）
+3. 验证：对照代码库实际情况检查
+4. 评估：对本代码库技术合理吗？
+5. 响应：技术性确认或有理有据的反驳
+6. 实施：一次一项，逐个测试，验证无回归
+```
+
+**按优先级处理：**
+- **Critical**：立即修复，不继续其他工作
+- **Important**：修复后才能继续
+- **Minor**：记录后处理
+
+**不清楚的反馈：先澄清，再实施。** 部分理解 = 错误实施。
+
+**禁止的响应：**
+- ❌ "You're absolutely right!" / "Great point!" （表演性同意）
+- ❌ "Let me implement that now"（验证之前）
+- ❌ 任何感谢表达（行动说话，直接修复）
+
+**正确的响应：**
+- ✅ "已修复。[变更内容的简要描述]"
+- ✅ 直接修复并在代码中展示
+
+### 何时反驳
+
+在以下情况用技术推理反驳（而非接受）：
+- 建议破坏现有功能
+- 审查者缺乏完整上下文
+- 违反 YAGNI（建议添加未被调用的功能）
+- 对此技术栈技术不正确
+- 与已有架构决策冲突
+
+**YAGNI 检查：** 如果审查者建议添加某功能，先 grep 代码库确认是否有实际调用，没有则反驳："没有代码调用此功能，移除它（YAGNI）？"
+
 ## 优势
 
 **对比手动执行:**
@@ -251,7 +310,6 @@ Final reviewer: All requirements met, ready to merge
 
 **必需的工作流 skills:**
 - **superpowers:writing-plans** - 创建此 skill 执行的计划
-- **superpowers:requesting-code-review** - 审查 subagent 的代码审查模板
 
 **Subagents 应使用:**
 - **superpowers:test-driven-development** - Subagents 为每个任务遵循 TDD
