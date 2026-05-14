@@ -135,4 +135,4 @@ git commit -m "feat: add specific feature"
 
 **"计划完成并保存到 `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`。请确认计划内容没有问题，确认后将自动调用 `superpowers:subagent-driven-development` 开始执行。"**
 
-等待用户确认计划内容。用户确认后，直接调用 `superpowers:subagent-driven-development`，对每个任务派遣独立 subagent 执行（每个任务一个新 subagent + 两阶段审查：规范符合性 → 代码质量）。
+**必须**等待用户确认计划内容。用户确认后，你才能调用 `superpowers:subagent-driven-development`，对每个任务派遣独立 subagent 执行（每个任务一个新 subagent + 两阶段审查：规范符合性 → 代码质量）。
