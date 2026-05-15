@@ -26,6 +26,34 @@ description: 仅在 workflow-router 流程中由编排步骤调用，或用户�
 在呈现设计并获得用户批准之前，不要调用任何实现技能、编写任何代码、搭建任何项目或采取任何实现行动。这适用于每个项目，无论看起来多么简单。
 </HARD-GATE>
 
+<HARD-GATE>
+## 文件路径硬约束
+
+所有输出文件**必须**严格遵循以下路径格式，禁止任何简化、缩写或自由发挥：
+
+| 文件类型 | 路径格式 |
+|---------|---------|
+| Spec（设计文档） | `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` |
+| Findings（发现文档） | `docs/superpowers/findings/YYYY-MM-DD-<topic>-findings.md` |
+
+**路径各段说明：**
+- `docs/superpowers/` — 固定前缀目录，**不可省略**
+- `specs/` / `findings/` — 按文件类型分的子目录，**不可省略**
+- `YYYY-MM-DD-` — 当日日期前缀（如 `2026-05-15-`），**不可省略**
+- `<topic>` — 主题的 kebab-case slug（如 `upgrade-by-tag`），从任务主题自动生成
+- `-design.md` / `-findings.md` — 固定后缀，**不可更改**（spec 文件后缀是 `-design.md` 不是 `-spec.md`）
+
+**具体示例：**
+- 主题 "upgrade by tag" + 日期 2026-05-15 →
+  - Spec: `docs/superpowers/specs/2026-05-15-upgrade-by-tag-design.md`
+  - Findings: `docs/superpowers/findings/2026-05-15-upgrade-by-tag-findings.md`
+- 主题 "user auth" + 日期 2026-05-15 →
+  - Spec: `docs/superpowers/specs/2026-05-15-user-auth-design.md`
+  - Findings: `docs/superpowers/findings/2026-05-15-user-auth-findings.md`
+
+**写入前必须执行路径校验：** 在写文件之前，显式列出完整路径，逐段核对是否符合上表格式。路径不合规则**禁止写入**，必须修正后重试。
+</HARD-GATE>
+
 ## 反模式："这太简单了不需要设计"
 
 每个项目都必须经历这个过程。待办列表、单函数工具、配置修改——所有这些都包括在内。"简单"项目往往是未经验证的假设导致最多返工的地方。设计可以简短（对于真正简单的项目只需几句话），但你必须呈现设计并获得批准。
@@ -35,13 +63,13 @@ description: 仅在 workflow-router 流程中由编排步骤调用，或用户�
 你必须为以下每项创建任务并按顺序完成：
 
 1. **探索项目上下文** — 检查文件、文档、最近的提交；
-   - **场景 A（新增功能）**：同时**新建 findings 文件**开始记录（见下方 Findings 规范）
+   - **场景 A（新增功能）**：同时**新建 findings 文件**开始记录（路径必须为 `docs/superpowers/findings/YYYY-MM-DD-<topic>-findings.md`，见"文件路径硬约束"区块）
    - **场景 B（bug 修复）**：findings 文件已由 systematic-debugging 创建，**追加到已有文件**，不新建
 2. **提供可视化伴侣**（如果主题将涉及可视化问题）— 这是单独的消息，不与澄清问题结合。参见下方的可视化伴侣部分。
 3. **提出澄清问题** — 一次一个，理解目的/约束/成功标准；每次使用浏览器/搜索工具后更新 findings
 4. **提出 2-3 种方案** — 包含权衡取舍和你的推荐；将技术决策及理由记入 findings
 5. **呈现设计** — 按复杂度分段呈现，每个部分后获得用户批准
-6. **编写设计文档** — 保存到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` 并提交；**同时提交 findings 文件**
+6. **编写设计文档** — **先核对路径格式**（见"文件路径硬约束"区块），再保存到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` 并提交；**同时提交 findings 文件**
 7. **规范自审** — 快速内联检查占位符、矛盾、歧义、范围（见下文）
 8. **用户审查书面规范** — 要求用户在继续之前审查规范文件
 9. **过渡到实现** — 调用 writing-plans 技能创建实现计划
@@ -87,6 +115,8 @@ Findings 文件与 spec 文件并列产出，贯穿整个头脑风暴过程**持
 ### 文件路径
 
 `docs/superpowers/findings/YYYY-MM-DD-<topic>-findings.md`
+
+**此路径不可简化或缩写！** 必须包含 `superpowers/findings/` 子目录 + 日期前缀 + `-findings.md` 后缀。详见"文件路径硬约束"区块。
 
 ### 创建时机
 
@@ -195,6 +225,7 @@ Findings 文件与 spec 文件并列产出，贯穿整个头脑风暴过程**持
 **文档化：**
 
 - 将验证过的设计（规范）写入 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+  - **此路径不可简化或缩写！** 必须包含 `superpowers/specs/` 子目录 + 日期前缀 + `-design.md` 后缀。详见"文件路径硬约束"区块。
   - （用户对规范位置的偏好会覆盖此默认值）
 - 如果可用，使用 elements-of-style:writing-clearly-and-concisely 技能
 - 将设计文档提交到 git
