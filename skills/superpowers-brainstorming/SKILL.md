@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: 仅在 workflow-router 流程中由编排步骤调用，或用户明确调用时使用（如"使用 brainstorming"）。通过协作对话探索需求、设计方案，输出 spec 文档。
+description: 通过协作对话探索需求、设计方案，输出 finding、spec 文档。
 ---
 
 # 将创意头脑风暴转化为设计
