@@ -308,7 +308,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 ## 集成
 
-**上游（此 skill 由 `superpowers-writing-plans` 触发，需用户确认计划后才调用）**
+**上游（此 skill 由 `superpowers-brainstorming` 触发，需用户确认 spec + plan 后才调用）**
 
 **Subagents 应使用:**
 - **superpowers-test-driven-development** - Subagents 为每个任务遵循 TDD

@@ -1,26 +1,26 @@
 ---
 name: superpowers-brainstorming
-description: 通过协作对话探索需求、设计方案，输出 finding、spec 文档。
+description: 通过协作对话探索需求、设计方案，输出 finding、spec、plan 文档。
 ---
 
-# 将创意头脑风暴转化为设计
+# 将创意头脑风暴转化为设计与实现计划
 
-通过自然的协作对话，帮助将创意转化为完整的设计和规范。
+通过自然的协作对话，帮助将创意转化为完整的设计规范和实现计划。
 
-首先理解当前项目上下文，然后逐一提问以完善创意。一旦理解了要构建的内容，呈现设计并获得用户批准。
+首先理解当前项目上下文，然后逐一提问以完善创意。一旦理解了要构建的内容，呈现设计并获得用户批准，然后同步产出 spec 和 plan 两份文档。
 
 ## 两种调用场景
 
-**场景 A：新增功能**（默认行为）
-从零开始：探索上下文、澄清需求、产出 spec，**同时新建 findings 文件**记录调研过程。
+**场景 A：新增功能 / 未经过 systematic-debugging**（默认行为）
+从零开始：探索上下文、澄清需求、产出 spec + plan，**同时新建 findings 文件**记录调研过程。
 
-**场景 B：Bug 修复**（由 workflow-router 在 systematic-debugging 之后调用）
+**场景 B：经过 systematic-debugging 之后**
 根本原因已由 systematic-debugging 调查清楚，findings 文件已存在。此时 brainstorming 的职责是：
 - 与用户讨论修复方案（2-3 种方案及权衡）
-- 产出 spec 文档（修复目标、验收标准、回归测试要求）
+- 产出 spec 文档（修复目标、验收标准、回归测试要求）+ plan 文档
 - **不新建 findings 文件**，如有新发现追加到已有文件
 
-**如何判断当前场景：** 若 `docs/superpowers/findings/` 下已存在与本次 bug 相关的 findings 文件，则为场景 B。
+**如何判断当前场景：** 若 `docs/superpowers/findings/` 下已存在与本次任务相关的 findings 文件，则为场景 B。
 
 <HARD-GATE>
 在呈现设计并获得用户批准之前，不要调用任何实现技能、编写任何代码、搭建任何项目或采取任何实现行动。这适用于每个项目，无论看起来多么简单。
@@ -35,10 +35,11 @@ description: 通过协作对话探索需求、设计方案，输出 finding、sp
 |---------|---------|
 | Spec（设计文档） | `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` |
 | Findings（发现文档） | `docs/superpowers/findings/YYYY-MM-DD-<topic>-findings.md` |
+| Plan（实现计划） | `docs/superpowers/plans/YYYY-MM-DD-<topic>.md` |
 
 **路径各段说明：**
 - `docs/superpowers/` — 固定前缀目录，**不可省略**
-- `specs/` / `findings/` — 按文件类型分的子目录，**不可省略**
+- `specs/` / `findings/` / `plans/` — 按文件类型分的子目录，**不可省略**
 - `YYYY-MM-DD-` — 当日日期前缀（如 `2026-05-15-`），**不可省略**
 - `<topic>` — 主题的 kebab-case slug（如 `upgrade-by-tag`），从任务主题自动生成
 - `-design.md` / `-findings.md` — 固定后缀，**不可更改**（spec 文件后缀是 `-design.md` 不是 `-spec.md`）
@@ -47,9 +48,7 @@ description: 通过协作对话探索需求、设计方案，输出 finding、sp
 - 主题 "upgrade by tag" + 日期 2026-05-15 →
   - Spec: `docs/superpowers/specs/2026-05-15-upgrade-by-tag-design.md`
   - Findings: `docs/superpowers/findings/2026-05-15-upgrade-by-tag-findings.md`
-- 主题 "user auth" + 日期 2026-05-15 →
-  - Spec: `docs/superpowers/specs/2026-05-15-user-auth-design.md`
-  - Findings: `docs/superpowers/findings/2026-05-15-user-auth-findings.md`
+  - Plan: `docs/superpowers/plans/2026-05-15-upgrade-by-tag.md`
 
 **写入前必须执行路径校验：** 在写文件之前，显式列出完整路径，逐段核对是否符合上表格式。路径不合规则**禁止写入**，必须修正后重试。
 </HARD-GATE>
@@ -63,16 +62,20 @@ description: 通过协作对话探索需求、设计方案，输出 finding、sp
 你必须为以下每项创建任务并按顺序完成：
 
 1. **探索项目上下文** — 检查文件、文档、最近的提交；
-   - **场景 A（新增功能）**：同时**新建 findings 文件**开始记录（路径必须为 `docs/superpowers/findings/YYYY-MM-DD-<topic>-findings.md`，见"文件路径硬约束"区块）
-   - **场景 B（bug 修复）**：findings 文件已由 systematic-debugging 创建，**追加到已有文件**，不新建
+   - **场景 A（未经过 systematic-debugging）（新增功能）**：同时**新建 findings 文件**开始记录（路径必须为 `docs/superpowers/findings/YYYY-MM-DD-<topic>-findings.md`，见"文件路径硬约束"区块）
+   - **场景 B（经过 systematic-debugging）（bug 修复）**：findings 文件已由 systematic-debugging 创建，**追加到已有文件**，不新建
 2. **提供可视化伴侣**（如果主题将涉及可视化问题）— 这是单独的消息，不与澄清问题结合。参见下方的可视化伴侣部分。
 3. **提出澄清问题** — 一次一个，理解目的/约束/成功标准；每次使用浏览器/搜索工具后更新 findings
 4. **提出 2-3 种方案** — 包含权衡取舍和你的推荐；将技术决策及理由记入 findings
 5. **呈现设计** — 按复杂度分段呈现，每个部分后获得用户批准
-6. **编写设计文档** — **先核对路径格式**（见"文件路径硬约束"区块），再保存到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` 并提交；**同时提交 findings 文件**
-7. **规范自审** — 快速内联检查占位符、矛盾、歧义、范围（见下文）
-8. **用户审查书面规范** — 要求用户在继续之前审查规范文件
-9. **过渡到实现** — 调用 writing-plans 技能创建实现计划
+6. **编写设计文档与实现计划** — **先核对路径格式**（见"文件路径硬约束"区块），然后**同步**产出：
+   - Spec 保存到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+   - Plan 保存到 `docs/superpowers/plans/YYYY-MM-DD-<topic>.md`
+   - Findings 一并提交
+   - 三份文件**一次性提交**到 git
+7. **规范自审** — 快速内联检查占位符、矛盾、歧义、范围（见下文）；同步检查计划的占位符、规格覆盖、类型一致性
+8. **用户审查书面规范与计划** — 要求用户在继续之前同时审查 spec 和 plan 文件
+9. **过渡到实现** — 调用 `superpowers-subagent-driven-development`
 
 ## 流程图
 
@@ -85,10 +88,10 @@ digraph brainstorming {
     "提出 2-3 种方案" [shape=box];
     "呈现设计部分" [shape=box];
     "用户批准设计?" [shape=diamond];
-    "编写设计文档" [shape=box];
-    "规范自审\n(内联修复)" [shape=box];
-    "用户审查规范?" [shape=diamond];
-    "规范批准，调用 writing-plans" [shape=doublecircle];
+    "同步编写 spec + plan + findings" [shape=box];
+    "规范与计划自审\n(内联修复)" [shape=box];
+    "用户审查 spec + plan?" [shape=diamond];
+    "批准，调用 subagent-driven-development" [shape=doublecircle];
 
     "探索项目上下文" -> "是否有可视化问题?";
     "是否有可视化问题?" -> "提供可视化伴侣\n(单独消息,无其他内容)" [label="是"];
@@ -98,19 +101,19 @@ digraph brainstorming {
     "提出 2-3 种方案" -> "呈现设计部分";
     "呈现设计部分" -> "用户批准设计?";
     "用户批准设计?" -> "呈现设计部分" [label="否,修订"];
-    "用户批准设计?" -> "编写设计文档" [label="是"];
-    "编写设计文档" -> "规范自审\n(内联修复)";
-    "规范自审\n(内联修复)" -> "用户审查规范?";
-    "用户审查规范?" -> "编写设计文档" [label="请求修改"];
-    "用户审查规范?" -> "规范批准，调用 writing-plans" [label="批准"];
+    "用户批准设计?" -> "同步编写 spec + plan + findings" [label="是"];
+    "同步编写 spec + plan + findings" -> "规范与计划自审\n(内联修复)";
+    "规范与计划自审\n(内联修复)" -> "用户审查 spec + plan?";
+    "用户审查 spec + plan?" -> "同步编写 spec + plan + findings" [label="请求修改"];
+    "用户审查 spec + plan?" -> "批准，调用 subagent-driven-development" [label="批准"];
 }
 ```
 
-**终止状态是调用 writing-plans。** 不要调用 frontend-design、mcp-builder 或任何其他实现技能。头脑风暴后你调用的唯一 skill 是 `superpowers-writing-plans`（需要用户批准 spec 后才调用）。
+**终止状态是调用 superpowers-subagent-driven-development。** 不得调用任何其他 skill，不得开始实现。头脑风暴后你调用的唯一 skill 是 `superpowers-subagent-driven-development`（需要用户批准 spec + plan 后才调用）。
 
 ## Findings 规范
 
-Findings 文件与 spec 文件并列产出，贯穿整个头脑风暴过程**持续更新**，不是最后才写。
+Findings 文件与 spec、plan 文件并列产出，贯穿整个头脑风暴过程**持续更新**，不是最后才写。
 
 ### 文件路径
 
@@ -179,7 +182,7 @@ Findings 文件与 spec 文件并列产出，贯穿整个头脑风暴过程**持
 
 ### 提交时机
 
-在**第 6 步编写设计文档时随 spec 一起提交**。
+在**第 6 步编写设计文档与实现计划时随 spec、plan 一起提交**。
 
 ## 流程
 
@@ -220,39 +223,150 @@ Findings 文件与 spec 文件并列产出，贯穿整个头脑风暴过程**持
 - 在现有代码存在影响工作的问题的地方（例如文件变得太大、边界不清、职责混乱），将有针对性的改进作为设计的一部分 - 就像优秀的开发者在他们工作的代码中改进代码一样。
 - 不要提出无关的重构。专注于服务于当前目标的内容。
 
-## 设计之后
+## 设计之后：同步产出 spec + plan
 
-**文档化：**
+用户批准设计后，**同时**编写以下三份文档：
 
-- 将验证过的设计（规范）写入 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-  - **此路径不可简化或缩写！** 必须包含 `superpowers/specs/` 子目录 + 日期前缀 + `-design.md` 后缀。详见"文件路径硬约束"区块。
-  - （用户对规范位置的偏好会覆盖此默认值）
-- 如果可用，使用 elements-of-style:writing-clearly-and-concisely 技能
-- 将设计文档提交到 git
+### Spec 文档
 
-**规范自审：**
-编写规范文档后，用全新的眼光审视它：
+将验证过的设计写入 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
 
+**此路径不可简化或缩写！** 必须包含 `superpowers/specs/` 子目录 + 日期前缀 + `-design.md` 后缀。详见"文件路径硬约束"区块。
+
+### Plan 文档
+
+将实现计划写入 `docs/superpowers/plans/YYYY-MM-DD-<topic>.md`
+
+Plan 文档假设工程师对代码库零了解且品味存疑，记录他们需要知道的一切：每个任务需要触及哪些文件、代码、测试，以及如何测试。以小粒度任务形式给出整个计划。DRY。YAGNI。TDD。频繁提交。
+
+#### 范围检查
+
+如果规格说明涵盖多个独立的子系统，建议将其分解为单独的计划 — 每个子系统一个计划。每个计划都应该能独立产生可工作、可测试的软件。
+
+#### 文件结构规划
+
+在定义任务之前，规划出将要创建或修改哪些文件以及每个文件的职责：
+
+- 设计具有清晰边界和明确定义接口的单元，每个文件一个职责
+- 优先选择较小的、聚焦的文件，而不是做太多事情的大型文件
+- 一起变化的文件放在一起，按职责分离而不是按技术层分离
+- 在现有代码库中，遵循既定模式；如果要修改的文件已经变得笨重，在计划中包含拆分是合理的
+
+#### 任务粒度
+
+**每个步骤是一个动作（2-5 分钟）：**
+- "编写失败的测试" - 步骤
+- "运行它以确保它失败" - 步骤
+- "实现使测试通过的最小代码" - 步骤
+- "运行测试并确保它们通过" - 步骤
+- "提交" - 步骤
+
+#### Plan 文档头部
+
+**每个计划必须以此头部开始：**
+
+```markdown
+# [Feature Name] Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** [One sentence describing what this builds]
+
+**Architecture:** [2-3 sentences about approach]
+
+**Tech Stack:** [Key technologies/libraries]
+
+---
+```
+
+#### 任务结构模板
+
+````markdown
+### Task N: [Component Name]
+
+**Files:**
+- Create: `exact/path/to/file.py`
+- Modify: `exact/path/to/existing.py:123-145`
+- Test: `tests/exact/path/to/test.py`
+
+- [ ] **Step 1: Write the failing test**
+
+```python
+def test_specific_behavior():
+    result = function(input)
+    assert result == expected
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `pytest tests/path/test.py::test_name -v`
+Expected: FAIL with "function not defined"
+
+- [ ] **Step 3: Write minimal implementation**
+
+```python
+def function(input):
+    return expected
+```
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `pytest tests/path/test.py::test_name -v`
+Expected: PASS
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add tests/path/test.py src/path/file.py
+git commit -m "feat: add specific feature"
+```
+````
+
+#### 禁止占位符
+
+每个步骤必须包含工程师需要的实际内容。这些是**计划失败** — 永远不要写它们：
+- "TBD"、"TODO"、"implement later"、"fill in details"
+- "添加适当的错误处理" / "添加验证" / "处理边界情况"
+- "为上述编写测试"（没有实际的测试代码）
+- "类似于任务 N"（重复代码 — 工程师可能不按顺序阅读任务）
+- 描述做什么而不展示如何做的步骤（代码步骤需要代码块）
+- 引用未在任何任务中定义的类型、函数或方法
+
+### 自审
+
+编写完 spec 和 plan 后，用全新的眼光同时审视两份文档：
+
+**Spec 自审：**
 1. **占位符扫描：** 是否有 "TBD"、"TODO"、不完整的部分或模糊的需求？修复它们。
 2. **内部一致性：** 是否有部分互相矛盾？架构是否与功能描述匹配？
-3. **范围检查：** 这是否足够聚焦以适合单个实现计划，还是需要分解？
+3. **范围检查：** 是否足够聚焦以适合单个实现计划，还是需要分解？
 4. **歧义检查：** 是否有任何需求可以有两种不同的解释？如果有，选择一种并明确说明。
 
-内联修复任何问题。无需重新审查 — 只需修复并继续。
+**Plan 自审：**
+1. **规格覆盖：** 快速浏览 spec 中的每个需求，能指出实现它的任务吗？列出任何缺口。
+2. **占位符扫描：** 搜索上文"禁止占位符"中的任何模式，修复它们。
+3. **类型一致性：** 后续任务中使用的类型、方法签名、属性名是否与早期任务中定义的匹配？
 
-**用户审查关卡：**
-规范审查循环通过后，要求用户在继续之前审查书面规范：
+内联修复任何问题，无需重新审查。
 
-> "规范已编写并提交到 `<path>`。请审查它，在我们开始编写实现计划之前让我知道是否要进行任何更改。"
+### 用户审查关卡
 
-等待用户的响应。如果他们请求更改，进行更改并重新运行规范审查循环。仅在用户批准后才继续。
+自审通过后，要求用户同时审查 spec 和 plan：
 
-**实现：**
+> "spec 和 plan 已编写并提交：
+> - Spec: `<spec-path>`
+> - Plan: `<plan-path>`
+>
+> 请审查这两份文档，在我们开始实现之前让我知道是否要进行任何更改。"
+
+等待用户响应。如果请求更改，修改对应文档并重新运行自审。仅在用户批准后才继续。
+
+### 实现
 
 <HARD-GATE>
-用户批准规范后，**下一步必须是 `superpowers-writing-plans`**。不得调用任何其他 skill，不得开始实现。
+用户批准 spec + plan 后，**下一步必须是 `superpowers-subagent-driven-development`**。不得调用任何其他 skill，不得开始实现。
 
-调用 `superpowers-writing-plans` 前必须等待用户明确批准 spec。
+调用 `superpowers-subagent-driven-development` 前必须等待用户明确批准。
 </HARD-GATE>
 
 ## 关键原则
@@ -281,4 +395,4 @@ Findings 文件与 spec 文件并列产出，贯穿整个头脑风暴过程**持
 关于 UI 主题的问题并不自动成为可视化问题。"个性在此上下文中意味着什么？" 是一个概念问题 — 使用终端。"哪种向导布局更好？" 是一个可视化问题 — 使用浏览器。
 
 如果他们同意使用伴侣，请在继续之前阅读详细指南：
-`skills/brainstorming/visual-companion.md`
+`skills/superpowers-brainstorming/visual-companion.md`
