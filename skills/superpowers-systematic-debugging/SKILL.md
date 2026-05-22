@@ -215,15 +215,18 @@ systematic-debugging → brainstorming → writing-plans → 实现
 
 ### Phase 4: 移交阶段
 
-**根本原因确认后，不要在此直接写修复代码。** 统一走以下流程：
+<HARD-GATE>
+根本原因确认后，**禁止在此直接写任何修复代码**。必须先向用户汇报根本原因，等待用户确认后，才能调用下一个 skill。
 
-```
-brainstorming → writing-plans → subagent-driven-development
-```
+**下一步必须是 `superpowers-brainstorming`，且只有在用户确认根本原因后才能调用。**
+
+向用户汇报格式：
+> "根本原因已确认：[描述根本原因]。Findings 已记录到 `<path>`。请确认后我们将进入 brainstorming 讨论修复方案。"
+
+等待用户响应。用户确认后，调用 `superpowers-brainstorming`。
+</HARD-GATE>
 
 - **brainstorming**：与用户讨论修复方案，产出 spec；有新发现则追加到已有 findings
-- **writing-plans**：基于 spec 制定具体修复计划，用户确认后执行
-- **subagent-driven-development**：按 plan 派遣 subagent 实现修复（内部遵循 test-driven-development）
 
 如果修复尝试失败：
    - 停止
@@ -319,11 +322,11 @@ brainstorming → writing-plans → subagent-driven-development
 - **`defense-in-depth.md`** - 在找到根本原因后在多层添加验证
 - **`condition-based-waiting.md`** - 用条件轮询替换任意超时
 
-**相关 skills（调查完成后依次调用）：**
-- **superpowers:brainstorming** - 根本原因明确后，与用户讨论修复方案，产出 spec
-- **superpowers:writing-plans** - 方案确定后，制定具体修复计划
-- **superpowers:test-driven-development** - 按 plan 写复现失败测试，再写修复
-- **superpowers:verification-before-completion** - 声称修复完成前验证无回归
+**下一步 skill（调查完成后）：**
+
+```
+superpowers-brainstorming（用户确认根本原因后调用）
+```
 
 ## 现实世界的影响
 

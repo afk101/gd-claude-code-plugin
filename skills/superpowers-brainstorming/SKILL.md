@@ -1,5 +1,5 @@
 ---
-name: brainstorming
+name: superpowers-brainstorming
 description: 通过协作对话探索需求、设计方案，输出 finding、spec 文档。
 ---
 
@@ -106,7 +106,7 @@ digraph brainstorming {
 }
 ```
 
-**终止状态是调用 writing-plans。** 不要调用 frontend-design、mcp-builder 或任何其他实现技能。头脑风暴后你调用的唯一技能是 writing-plans。
+**终止状态是调用 writing-plans。** 不要调用 frontend-design、mcp-builder 或任何其他实现技能。头脑风暴后你调用的唯一 skill 是 `superpowers-writing-plans`（需要用户批准 spec 后才调用）。
 
 ## Findings 规范
 
@@ -249,8 +249,11 @@ Findings 文件与 spec 文件并列产出，贯穿整个头脑风暴过程**持
 
 **实现：**
 
-- 调用 writing-plans 技能创建详细的实现计划
-- 不要调用任何其他技能。writing-plans 是下一步。
+<HARD-GATE>
+用户批准规范后，**下一步必须是 `superpowers-writing-plans`**。不得调用任何其他 skill，不得开始实现。
+
+调用 `superpowers-writing-plans` 前必须等待用户明确批准 spec。
+</HARD-GATE>
 
 ## 关键原则
 

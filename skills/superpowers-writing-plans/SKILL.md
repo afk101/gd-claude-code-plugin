@@ -47,7 +47,7 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -131,8 +131,13 @@ git commit -m "feat: add specific feature"
 
 ## 执行移交
 
-计划保存后，向用户展示计划并请求确认计划内容：
+<HARD-GATE>
+计划保存后，**必须先展示计划并等待用户明确确认**，才能进入下一步。
 
-**"计划完成并保存到 `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`。请确认计划内容没有问题。"**
+**下一步必须是 `superpowers-subagent-driven-development`，且只有在用户确认计划内容后才能调用。**
 
-**必须**等待用户确认计划内容。用户确认后，你才能调用 `superpowers:subagent-driven-development`，对每个任务派遣独立 subagent 执行（每个任务一个新 subagent + 两阶段审查：规范符合性 → 代码质量）。
+向用户汇报格式：
+> "计划完成并保存到 `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`。请确认计划内容没有问题，确认后将开始执行实现。"
+
+等待用户响应。用户确认后，调用 `superpowers-subagent-driven-development`。
+</HARD-GATE>

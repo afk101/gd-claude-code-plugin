@@ -1,5 +1,5 @@
 ---
-name: subagent-driven-development
+name: superpowers-subagent-driven-development
 description: Use when executing implementation plans with independent tasks in the current session
 ---
 
@@ -308,8 +308,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 ## 集成
 
-**必需的工作流 skills:**
-- **superpowers:writing-plans** - 创建此 skill 执行的计划
+**上游（此 skill 由 `superpowers-writing-plans` 触发，需用户确认计划后才调用）**
 
 **Subagents 应使用:**
-- **superpowers:test-driven-development** - Subagents 为每个任务遵循 TDD
+- **superpowers-test-driven-development** - Subagents 为每个任务遵循 TDD
