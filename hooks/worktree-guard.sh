@@ -19,7 +19,7 @@ fi
 
 # 如果在 worktree 中，输出 additionalContext 警告
 if [ "$IS_WORKTREE" = "true" ]; then
-  WARNING="⚠️ WORKTREE 安全提示: 你当前位于 git worktree 中 (路径: ${WORKTREE_PATH})。严格禁止修改主 worktree 的代码。你只能修改当前 worktree 目录内的文件。如果需要操作主 worktree 中的文件，请停止操作， 向用户获取批准。"
+  WARNING="⚠️ WORKTREE Safety Notice: You are currently in a git worktree (path: ${WORKTREE_PATH}). Strictly prohibited from modifying code in the main worktree. You can only modify files within the current worktree directory. If you need to operate on files in the main worktree, stop the operation and seek user approval."
 
   # 输出 JSON，additionalContext 会作为上下文附加到用户的提示词旁边
   jq -n --arg ctx "$WARNING" '{
