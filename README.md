@@ -1,3 +1,6 @@
+# 配置记录  
+"viewMode": "verbose"  
+
 # gd-claude-code-plugin
 
 Claude Code 增强插件集合 — 包含智能体（Agents）、技能（Skills）和钩子（Hooks）。
