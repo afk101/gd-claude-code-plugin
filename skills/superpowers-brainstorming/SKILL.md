@@ -75,7 +75,7 @@ description: 通过协作对话探索需求、设计方案，输出 finding、sp
    - 三份文件**一次性提交**到 git
 7. **规范自审** — 快速内联检查占位符、矛盾、歧义、范围（见下文）；同步检查计划的占位符、规格覆盖、类型一致性
 8. **用户审查书面规范与计划** — 要求用户在继续之前同时审查 spec 和 plan 文件
-9. **过渡到实现** — 调用 `superpowers-subagent-driven-development`
+9. **过渡到实现** — 询问用户选择调用哪个实现技能（见下方"实现技能选择"）
 
 ## 流程图
 
@@ -91,7 +91,9 @@ digraph brainstorming {
     "同步编写 spec + plan + findings" [shape=box];
     "规范与计划自审\n(内联修复)" [shape=box];
     "用户审查 spec + plan?" [shape=diamond];
-    "批准，调用 subagent-driven-development" [shape=doublecircle];
+    "用户选择实现技能" [shape=diamond];
+    "调用 superpowers-subagent-driven-development" [shape=doublecircle];
+    "调用 superpowers-executing-plans" [shape=doublecircle];
 
     "探索项目上下文" -> "是否有可视化问题?";
     "是否有可视化问题?" -> "提供可视化伴侣\n(单独消息,无其他内容)" [label="是"];
@@ -105,11 +107,13 @@ digraph brainstorming {
     "同步编写 spec + plan + findings" -> "规范与计划自审\n(内联修复)";
     "规范与计划自审\n(内联修复)" -> "用户审查 spec + plan?";
     "用户审查 spec + plan?" -> "同步编写 spec + plan + findings" [label="请求修改"];
-    "用户审查 spec + plan?" -> "批准，调用 subagent-driven-development" [label="批准"];
+    "用户审查 spec + plan?" -> "用户选择实现技能" [label="批准"];
+    "用户选择实现技能" -> "调用 superpowers-subagent-driven-development" [label="superpowers-subagent-driven-development"];
+    "用户选择实现技能" -> "调用 superpowers-executing-plans" [label="superpowers-executing-plans"];
 }
 ```
 
-**终止状态是调用 superpowers-subagent-driven-development。** 不得调用任何其他 skill，不得开始实现。头脑风暴后你调用的唯一 skill 是 `superpowers-subagent-driven-development`（需要用户批准 spec + plan 后才调用）。
+**终止状态是调用用户选择的实现技能。** 不得调用除 `superpowers-subagent-driven-development` 或 `superpowers-executing-plans` 之外的任何 skill，不得直接开始实现。头脑风暴后必须通过用户选择来决定调用哪个实现技能（需要用户批准 spec + plan 后才调用）。
 
 ## Findings 规范
 
@@ -268,7 +272,7 @@ Plan 文档假设工程师对代码库零了解且品味存疑，记录他们需
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-subagent-driven-development OR superpowers-executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -364,9 +368,15 @@ git commit -m "feat: add specific feature"
 ### 实现
 
 <HARD-GATE>
-用户批准 spec + plan 后，**下一步必须是 `superpowers-subagent-driven-development`**。不得调用任何其他 skill，不得开始实现。
+用户批准 spec + plan 后，**下一步必须询问用户选择哪个实现技能**，不得直接调用任何 skill，不得开始实现。
 
-调用 `superpowers-subagent-driven-development` 前必须等待用户明确批准。
+**实现技能选择：** 向用户呈现以下两个选项，等待用户明确选择后再调用：
+
+> "请选择实现方式：
+> 1. **superpowers-subagent-driven-development** — 每个任务派生独立子代理，任务间隔离，适合任务间相对独立、可并行的场景
+> 2. **superpowers-executing-plans** — 在当前会话中顺序执行计划，适合任务间依赖紧密、需要共享上下文的场景"
+
+用户选择后，调用对应的 skill。不得在未询问用户的情况下自行决定调用哪个 skill。
 </HARD-GATE>
 
 ## 关键原则
