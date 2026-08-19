@@ -17,15 +17,15 @@ Use this skill to search the web via the [Exa API](https://exa.ai) using `curl`.
 
 ```bash
 curl -s -X POST 'https://api.exa.ai/search' \
-  -H 'x-api-key: 69b2e0ee-f92a-48ab-9233-cc8a750a1e50' \
+  -H 'x-api-key: c883d758-7b30-45c9-9a96-8301c70b6fd3' \
   -H 'Content-Type: application/json' \
   -d '{
     "query": "YOUR QUERY HERE",
     "type": "auto",
-    "num_results": 10,
+    "numResults": 10,
     "contents": {
       "highlights": {
-        "max_characters": 4000
+        "maxCharacters": 4000
       }
     }
   }'
@@ -36,8 +36,8 @@ curl -s -X POST 'https://api.exa.ai/search' \
 | Parameter | Value | Notes |
 |-----------|-------|-------|
 | `type` | `"auto"` | Default. Use `"fast"` for speed, `"deep"` for thorough research |
-| `num_results` | `5–10` | Reduce for faster responses |
-| `contents.highlights.max_characters` | `4000` | Key excerpts. Switch to `"text"` for full page content |
+| `numResults` | `5–10` | Reduce for faster responses |
+| `contents.highlights.maxCharacters` | `4000` | Key excerpts. Switch to `"text"` for full page content |
 
 ## Common Search Patterns
 
@@ -45,14 +45,14 @@ curl -s -X POST 'https://api.exa.ai/search' \
 
 ```bash
 curl -s -X POST 'https://api.exa.ai/search' \
-  -H 'x-api-key: 69b2e0ee-f92a-48ab-9233-cc8a750a1e50' \
+  -H 'x-api-key: c883d758-7b30-45c9-9a96-8301c70b6fd3' \
   -H 'Content-Type: application/json' \
   -d '{
     "query": "Next.js 15 app router data fetching",
     "type": "auto",
-    "num_results": 5,
+    "numResults": 5,
     "contents": {
-      "highlights": { "max_characters": 4000 }
+      "highlights": { "maxCharacters": 4000 }
     }
   }'
 ```
@@ -61,14 +61,14 @@ curl -s -X POST 'https://api.exa.ai/search' \
 
 ```bash
 curl -s -X POST 'https://api.exa.ai/search' \
-  -H 'x-api-key: 69b2e0ee-f92a-48ab-9233-cc8a750a1e50' \
+  -H 'x-api-key: c883d758-7b30-45c9-9a96-8301c70b6fd3' \
   -H 'Content-Type: application/json' \
   -d '{
     "query": "Prisma schema relations one-to-many",
     "type": "auto",
-    "num_results": 3,
+    "numResults": 3,
     "contents": {
-      "text": { "max_characters": 20000 }
+      "text": { "maxCharacters": 20000 }
     }
   }'
 ```
@@ -77,15 +77,15 @@ curl -s -X POST 'https://api.exa.ai/search' \
 
 ```bash
 curl -s -X POST 'https://api.exa.ai/search' \
-  -H 'x-api-key: 69b2e0ee-f92a-48ab-9233-cc8a750a1e50' \
+  -H 'x-api-key: c883d758-7b30-45c9-9a96-8301c70b6fd3' \
   -H 'Content-Type: application/json' \
   -d '{
     "query": "OpenAI GPT-5 release",
     "type": "auto",
     "category": "news",
-    "num_results": 5,
+    "numResults": 5,
     "contents": {
-      "highlights": { "max_characters": 4000 }
+      "highlights": { "maxCharacters": 4000 }
     }
   }'
 ```
@@ -94,14 +94,14 @@ curl -s -X POST 'https://api.exa.ai/search' \
 
 ```bash
 curl -s -X POST 'https://api.exa.ai/search' \
-  -H 'x-api-key: 69b2e0ee-f92a-48ab-9233-cc8a750a1e50' \
+  -H 'x-api-key: c883d758-7b30-45c9-9a96-8301c70b6fd3' \
   -H 'Content-Type: application/json' \
   -d '{
     "query": "vector database comparison 2025 performance benchmarks",
     "type": "deep",
-    "num_results": 10,
+    "numResults": 10,
     "contents": {
-      "highlights": { "max_characters": 4000 }
+      "highlights": { "maxCharacters": 4000 }
     }
   }'
 ```
@@ -110,11 +110,11 @@ curl -s -X POST 'https://api.exa.ai/search' \
 
 ```bash
 curl -s -X POST 'https://api.exa.ai/contents' \
-  -H 'x-api-key: 69b2e0ee-f92a-48ab-9233-cc8a750a1e50' \
+  -H 'x-api-key: c883d758-7b30-45c9-9a96-8301c70b6fd3' \
   -H 'Content-Type: application/json' \
   -d '{
     "urls": ["https://docs.example.com/api"],
-    "text": { "max_characters": 20000 }
+    "text": { "maxCharacters": 20000 }
   }'
 ```
 
@@ -159,12 +159,12 @@ Focus on authoritative sources when needed:
 To avoid hardcoding the key in commands:
 
 ```bash
-export EXA_API_KEY="69b2e0ee-f92a-48ab-9233-cc8a750a1e50"
+export EXA_API_KEY="c883d758-7b30-45c9-9a96-8301c70b6fd3"
 
 curl -s -X POST 'https://api.exa.ai/search' \
   -H "x-api-key: $EXA_API_KEY" \
   -H 'Content-Type: application/json' \
-  -d '{ "query": "...", "type": "auto", "num_results": 5, "contents": {"highlights": {"max_characters": 4000}} }'
+  -d '{ "query": "...", "type": "auto", "numResults": 5, "contents": {"highlights": {"maxCharacters": 4000}} }'
 ```
 
 ## Common Mistakes to Avoid
